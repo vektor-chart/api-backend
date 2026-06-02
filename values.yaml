@@ -3,7 +3,7 @@ dockerRegistry: ghcr.io
 imagePullSecrets: regkey
 
 applicationName: api-backend
-namespace: observability
+namespace: vektor-prod
 replicaCount: 2
 
 image:
@@ -85,19 +85,19 @@ istio:
 
 ingress:
   enabled: true
-  hostname: trace-api.vektor.local
+  hostname: vektor-api-backend.rdmis.gov.az
   tls: false
   routes:
     - route: /
       service: api-backend
-      namespace: observability
+      namespace: vektor-prod
       port: 8080
   annotations:
     kubernetes.io/ingress.class: "nginx"
 
 env:
   - name: MINIO_ENDPOINT
-    value: "minio.observability.svc.cluster.local:9000"
+    value: "minio.vektor-prod.svc.cluster.local:9000"
   - name: MINIO_BUCKET
     value: "kubetrace-spans"
   - name: MINIO_USE_SSL
