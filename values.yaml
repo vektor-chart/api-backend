@@ -107,6 +107,13 @@ env:
   - name: TZ
     value: UTC
 
+podAnnotations:
+  instrumentation.opentelemetry.io/inject-sdk: "true"
+
+instrumentation:
+  enabled: true
+  exporterEndpoint: "http://agent-backend.vektor-prod.svc.cluster.local:4317"
+
 hostpathVolume:
   enabled: false
 
