@@ -1,0 +1,121 @@
+# Default values.yaml for api-backend
+dockerRegistry: ghcr.io
+imagePullSecrets: regkey
+
+applicationName: api-backend
+namespace: observability
+replicaCount: 2
+
+image:
+  name: vektor-code/api-backend
+  tag: prod-latest
+  pullPolicy: IfNotPresent
+
+secrets:
+  enabled: false
+  data: []
+
+configmaps:
+  enabled: false
+
+terminationGracePeriodSeconds: 30
+
+ports:
+  enabled: true
+  containerPort: 8080
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8080
+
+hostsfile:
+  enabled: false
+  records: []
+
+strategy:
+  enabled: true
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+minReadySeconds: 5
+revisionHistoryLimit: 3
+
+hpa:
+  enabled: true
+  minReplicas: "2"
+  maxReplicas: "10"
+  cpuUtilization: "80"
+  memoryUtilization: "75"
+
+resources:
+  enabled: true
+  limits:
+    memory: 2Gi
+    cpu: "2"
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  timeoutSeconds: 3
+  failureThreshold: 5
+  successThreshold: 1
+
+istio:
+  enabled: false
+
+ingress:
+  enabled: true
+  hostname: trace-api.vektor.local
+  tls: false
+  routes:
+    - route: /
+      service: api-backend
+      namespace: observability
+      port: 8080
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+
+env:
+  - name: MINIO_ENDPOINT
+    value: "minio.observability.svc.cluster.local:9000"
+  - name: MINIO_BUCKET
+    value: "kubetrace-spans"
+  - name: MINIO_USE_SSL
+    value: "false"
+  - name: KUBETRACE_DEMO
+    value: "false"
+  - name: TZ
+    value: UTC
+
+hostpathVolume:
+  enabled: false
+
+volumeMounts:
+  enabled: false
+
+nameOverride: ""
+fullnameOverride: ""
+podSecurityContext: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

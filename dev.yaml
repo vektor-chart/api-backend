@@ -1,0 +1,113 @@
+# dev.yaml override for api-backend
+dockerRegistry: reg.mof.az/library
+imagePullSecrets: regkey
+
+applicationName: api-backend
+namespace: tickets-dev
+replicaCount: 1
+
+image:
+  name: vektor-code/api-backend
+  tag: prod-latest
+  pullPolicy: IfNotPresent
+
+secrets:
+  enabled: true
+  data:
+    - name: MINIO_ACCESS_KEY
+      valueFrom:
+        name: minio-creds
+        key: access-key
+    - name: MINIO_SECRET_KEY
+      valueFrom:
+        name: minio-creds
+        key: secret-key
+
+configmaps:
+  enabled: false
+
+terminationGracePeriodSeconds: 30
+
+ports:
+  enabled: true
+  containerPort: 8080
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8080
+
+hostsfile:
+  enabled: false
+  records: []
+
+strategy:
+  enabled: true
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+minReadySeconds: 5
+revisionHistoryLimit: 1
+
+hpa:
+  enabled: false
+
+resources:
+  enabled: true
+  limits:
+    memory: 1Gi
+    cpu: 1
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 2
+  failureThreshold: 3
+  successThreshold: 1
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 20
+  timeoutSeconds: 2
+  failureThreshold: 3
+  successThreshold: 1
+
+istio:
+  enabled: false
+
+ingress:
+  enabled: true
+  hostname: tickets-api-dev.mof.az
+  tls: true
+  routes:
+    - route: /
+      service: api-backend
+      namespace: tickets-dev
+      port: 8080
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
+env:
+  - name: MINIO_ENDPOINT
+    value: "minio.default.svc.cluster.local:9000"
+  - name: MINIO_BUCKET
+    value: "kubetrace-spans"
+  - name: MINIO_USE_SSL
+    value: "false"
+  - name: KUBETRACE_DEMO
+    value: "false"
+  - name: TZ
+    value: 'Asia/Baku'
