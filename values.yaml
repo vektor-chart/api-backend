@@ -97,7 +97,7 @@ env:
 podAnnotations:
   instrumentation.opentelemetry.io/inject-sdk: "true"
 instrumentation:
-  enabled: true
+  enabled: false
   exporterEndpoint: "http://agent-backend.vektor-prod.svc.cluster.local:4317"
 hostpathVolume:
   enabled: false
