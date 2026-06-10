@@ -1,0 +1,10 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.applicationName }}-watcher
+  labels:
+    app.kubernetes.io/name: {{ .Values.applicationName }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "namespaces", "services"]
+    verbs: ["get", "list", "watch"]
