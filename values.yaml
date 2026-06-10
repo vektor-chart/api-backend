@@ -70,7 +70,7 @@ istio:
   enabled: false
 ingress:
   enabled: true
-  hostname: vektor-api-backend.rdmis.gov.az
+  hostname: trace-api.fitnest.az
   tls: false
   routes:
     - route: /
@@ -81,7 +81,11 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
 env:
   - name: MINIO_ENDPOINT
-    value: "minio.vektor-prod.svc.cluster.local:9000"
+    value: "161.97.183.7:9000"
+  - name: MINIO_ACCESS_KEY
+    value: "minioadmin"
+  - name: MINIO_SECRET_KEY
+    value: "minioadmin"
   - name: MINIO_BUCKET
     value: "kubetrace-spans"
   - name: MINIO_USE_SSL
