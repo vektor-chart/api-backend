@@ -1,38 +1,29 @@
 # Default values.yaml for api-backend
 dockerRegistry: ghcr.io
 imagePullSecrets: regkey
-
 applicationName: api-backend
 namespace: vektor-prod
 replicaCount: 2
-
 image:
   name: vektor-code/api-backend
-  tag: prod-latest
+  tag: prod-c322166
   pullPolicy: IfNotPresent
-
 secrets:
   enabled: false
   data: []
-
 configmaps:
   enabled: false
-
 terminationGracePeriodSeconds: 30
-
 ports:
   enabled: true
   containerPort: 8080
-
 service:
   enabled: true
   type: ClusterIP
   port: 8080
-
 hostsfile:
   enabled: false
   records: []
-
 strategy:
   enabled: true
   type: RollingUpdate
@@ -41,14 +32,12 @@ strategy:
     maxSurge: 1
 minReadySeconds: 5
 revisionHistoryLimit: 3
-
 hpa:
   enabled: true
   minReplicas: "2"
   maxReplicas: "10"
   cpuUtilization: "80"
   memoryUtilization: "75"
-
 resources:
   enabled: true
   limits:
@@ -57,7 +46,6 @@ resources:
   requests:
     cpu: 500m
     memory: 1Gi
-
 readinessProbe:
   enabled: true
   httpGet:
@@ -68,7 +56,6 @@ readinessProbe:
   timeoutSeconds: 3
   failureThreshold: 3
   successThreshold: 1
-
 livenessProbe:
   enabled: true
   httpGet:
@@ -79,10 +66,8 @@ livenessProbe:
   timeoutSeconds: 3
   failureThreshold: 5
   successThreshold: 1
-
 istio:
   enabled: false
-
 ingress:
   enabled: true
   hostname: vektor-api-backend.rdmis.gov.az
@@ -94,7 +79,6 @@ ingress:
       port: 8080
   annotations:
     kubernetes.io/ingress.class: "nginx"
-
 env:
   - name: MINIO_ENDPOINT
     value: "minio.vektor-prod.svc.cluster.local:9000"
@@ -106,20 +90,15 @@ env:
     value: "false"
   - name: TZ
     value: UTC
-
 podAnnotations:
   instrumentation.opentelemetry.io/inject-sdk: "true"
-
 instrumentation:
   enabled: true
   exporterEndpoint: "http://agent-backend.vektor-prod.svc.cluster.local:4317"
-
 hostpathVolume:
   enabled: false
-
 volumeMounts:
   enabled: false
-
 nameOverride: ""
 fullnameOverride: ""
 podSecurityContext: {}
