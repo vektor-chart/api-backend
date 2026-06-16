@@ -6,7 +6,7 @@ namespace: vektor-prod
 replicaCount: 1
 image:
   name: vektor-code/api-backend
-  tag: prod-bfdd18c
+  tag: prod-d8e687a
   pullPolicy: IfNotPresent
 secrets:
   enabled: false
