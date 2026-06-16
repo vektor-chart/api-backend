@@ -1,9 +1,7 @@
-# Default values.yaml for api-backend
 dockerRegistry: ghcr.io
 imagePullSecrets: regkey
-
 applicationName: api-backend
-namespace: vektor-prod
+namespace: trace-prod
 replicaCount: 2
 
 image:
@@ -39,6 +37,7 @@ strategy:
   rollingUpdate:
     maxUnavailable: 0
     maxSurge: 1
+
 minReadySeconds: 5
 revisionHistoryLimit: 3
 
@@ -85,19 +84,20 @@ istio:
 
 ingress:
   enabled: true
-  hostname: vektor-api-backend.rdmis.gov.az
-  tls: false
+  hostname: api.trace.rdmis.gov.az
+  tls: true
+  tlsSecretName: api-backend
   routes:
     - route: /
       service: api-backend
-      namespace: vektor-prod
+      namespace: trace-prod
       port: 8080
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: nginx
 
 env:
   - name: MINIO_ENDPOINT
-    value: "minio.vektor-prod.svc.cluster.local:9000"
+    value: "minio.trace-prod.svc.cluster.local:9000"
   - name: MINIO_BUCKET
     value: "kubetrace-spans"
   - name: MINIO_USE_SSL
