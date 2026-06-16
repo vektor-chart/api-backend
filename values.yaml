@@ -3,7 +3,7 @@ dockerRegistry: ghcr.io
 imagePullSecrets: regkey
 applicationName: api-backend
 namespace: vektor-prod
-replicaCount: 2
+replicaCount: 1
 image:
   name: vektor-code/api-backend
   tag: prod-bfdd18c
@@ -34,7 +34,7 @@ minReadySeconds: 5
 revisionHistoryLimit: 3
 hpa:
   enabled: true
-  minReplicas: "2"
+  minReplicas: "1"
   maxReplicas: "10"
   cpuUtilization: "80"
   memoryUtilization: "75"
