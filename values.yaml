@@ -3,51 +3,40 @@ imagePullSecrets: regkey
 applicationName: api-backend
 namespace: trace-prod
 replicaCount: 2
-
 image:
   name: vektor-code/api-backend
   tag: prod-latest
   pullPolicy: IfNotPresent
-
 secrets:
   enabled: false
   data: []
-
 configmaps:
   enabled: false
-
 terminationGracePeriodSeconds: 30
-
 ports:
   enabled: true
   containerPort: 8080
-
 service:
   enabled: true
   type: LoadBalancer
   port: 8080
-
 hostsfile:
   enabled: false
   records: []
-
 strategy:
   enabled: true
   type: RollingUpdate
   rollingUpdate:
     maxUnavailable: 0
     maxSurge: 1
-
 minReadySeconds: 5
 revisionHistoryLimit: 3
-
 hpa:
   enabled: true
   minReplicas: "2"
   maxReplicas: "10"
   cpuUtilization: "80"
   memoryUtilization: "75"
-
 resources:
   enabled: true
   limits:
@@ -56,7 +45,6 @@ resources:
   requests:
     cpu: 500m
     memory: 1Gi
-
 readinessProbe:
   enabled: true
   httpGet:
@@ -67,7 +55,6 @@ readinessProbe:
   timeoutSeconds: 3
   failureThreshold: 3
   successThreshold: 1
-
 livenessProbe:
   enabled: true
   httpGet:
@@ -78,10 +65,8 @@ livenessProbe:
   timeoutSeconds: 3
   failureThreshold: 5
   successThreshold: 1
-
 istio:
   enabled: false
-
 ingress:
   enabled: true
   hostname: api.trace.rdmis.gov.az
@@ -94,29 +79,30 @@ ingress:
       port: 8080
   annotations:
     kubernetes.io/ingress.class: nginx
-
 instrumentation:
   enabled: false
   exporterEndpoint: ""
-
 env:
   - name: MINIO_ENDPOINT
-    value: "minio.trace-prod.svc.cluster.local:9000"
-  - name: MINIO_BUCKET
-    value: "kubetrace-spans"
+    value: "10.254.6.25"
+  - name: MINIO_PORT
+    value: "9000"
   - name: MINIO_USE_SSL
     value: "false"
+  - name: MINIO_ACCESS_KEY
+    value: "trace"
+  - name: MINIO_SECRET_KEY
+    value: "slmM4lCsMGFMSqBB"
+  - name: MINIO_BUCKET
+    value: "trace"
   - name: KUBETRACE_DEMO
     value: "false"
   - name: TZ
     value: UTC
-
 hostpathVolume:
   enabled: false
-
 volumeMounts:
   enabled: false
-
 nameOverride: ""
 fullnameOverride: ""
 podSecurityContext: {}
