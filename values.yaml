@@ -5,8 +5,8 @@ namespace: trace-prod
 replicaCount: 2
 image:
   name: vektor-code/api-backend
-  tag: prod-latest
-  pullPolicy: IfNotPresent
+  tag: prod
+  pullPolicy: Always
 secrets:
   enabled: false
   data: []
@@ -69,7 +69,7 @@ istio:
   enabled: false
 ingress:
   enabled: true
-  hostname: api.trace.rdmis.gov.az
+  hostname: api-trace.rdmis.gov.az
   tls: true
   tlsSecretName: api-backend
   routes:
@@ -97,6 +97,28 @@ env:
     value: "false"
   - name: TZ
     value: UTC
+  - name: JWT_SECRET
+    value: "super-secret-key-2026"
+  - name: ADMIN_USERNAME
+    value: "admin"
+  - name: ADMIN_PASSWORD
+    value: "tracesvc-admin-pass-2026"
+  - name: LDAP_ENABLED
+    value: "true"
+  - name: LDAP_URL
+    value: "ldap://10.254.5.10:389"
+  - name: LDAP_BIND_DN
+    value: "CN=tracesvc,OU=SERVICE_USERS,OU=MOF,DC=mof,DC=local"
+  - name: LDAP_BIND_PASSWORD
+    value: "jOg13snoLbqYEecq"
+  - name: LDAP_USER_BASE_DN
+    value: "OU=MOF,DC=mof,DC=local"
+  - name: LDAP_USER_FILTER
+    value: "(&(objectClass=user)(sAMAccountName={login})(!(userAccountControl:1.2.840.113556.1.4.803:=2)))"
+  - name: LDAP_USER_NAME_ATTR
+    value: "displayName"
+  - name: LDAP_USER_EMAIL_ATTR
+    value: "mail"
 hostpathVolume:
   enabled: false
 volumeMounts:
