@@ -84,9 +84,7 @@ instrumentation:
   exporterEndpoint: ""
 env:
   - name: MINIO_ENDPOINT
-    value: "10.254.6.25"
-  - name: MINIO_PORT
-    value: "9000"
+    value: "10.254.6.25:9000"
   - name: MINIO_USE_SSL
     value: "false"
   - name: MINIO_ACCESS_KEY
