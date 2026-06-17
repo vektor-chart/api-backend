@@ -60,16 +60,17 @@ spec:
           ports:
           - containerPort: {{ .Values.ports.containerPort }}
           {{- end }}
-          {{- if .Values.hostpathVolume.enabled }}
+          {{- if or .Values.hostpathVolume.enabled .Values.volumeMounts.enabled }}
           volumeMounts:
+          {{- if .Values.hostpathVolume.enabled }}
           - name: {{ .Values.hostpathVolume.name }}
             mountPath: {{ .Values.hostpathVolume.mountPath }}
           {{- end }}
           {{- if .Values.volumeMounts.enabled }}
-          volumeMounts:
           {{- range .Values.volumeMounts.volumes }}
-          - mountPath: {{ .Values.volumeMounts.volumes.mountPath }}
-            name: {{ .Values.volumeMounts.volumes.name }}
+          - mountPath: {{ .mountPath }}
+            name: {{ .name }}
+          {{- end }}
           {{- end }}
           {{- end }}
           env:
@@ -133,18 +134,19 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.volumeMounts.enabled }}
+    {{- if or .Values.volumeMounts.enabled .Values.hostpathVolume.enabled }}
       volumes:
+      {{- if .Values.volumeMounts.enabled }}
       {{- range .Values.volumeMounts.volumes }}
-      - name: {{ .Values.volumeMounts.volumes.name }}
+      - name: {{ .name }}
         persistentVolumeClaim:
-          claimName: {{ .Values.volumeMounts.volumes.claimName }}
-      {{- end }}    
-    {{- end }}
-    {{- if .Values.hostpathVolume.enabled }}
-      volumes:
-        - name: {{ .Values.hostpathVolume.name }}
-          hostPath:
-            path: {{ .Values.hostpathVolume.mountPath }}
-            type: {{ .Values.hostpathVolume.type }}
+          claimName: {{ .claimName }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.hostpathVolume.enabled }}
+      - name: {{ .Values.hostpathVolume.name }}
+        hostPath:
+          path: {{ .Values.hostpathVolume.mountPath }}
+          type: {{ .Values.hostpathVolume.type }}
+      {{- end }}
     {{- end }}
