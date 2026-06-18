@@ -32,7 +32,7 @@ strategy:
 minReadySeconds: 5
 revisionHistoryLimit: 3
 hpa:
-  enabled: true
+  enabled: false
   minReplicas: "2"
   maxReplicas: "10"
   cpuUtilization: "80"
