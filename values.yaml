@@ -2,7 +2,7 @@ dockerRegistry: ghcr.io
 imagePullSecrets: regkey
 applicationName: api-backend
 namespace: trace-prod
-replicaCount: 2
+replicaCount: 1
 image:
   name: vektor-code/api-backend
   tag: prod-433efcc
@@ -41,9 +41,9 @@ resources:
   enabled: true
   limits:
     memory: 2Gi
-    cpu: "2"
+    cpu: 2
   requests:
-    cpu: 500m
+    cpu: 1
     memory: 1Gi
 readinessProbe:
   enabled: true
