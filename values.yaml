@@ -5,7 +5,7 @@ namespace: trace-prod
 replicaCount: 2
 image:
   name: vektor-code/api-backend
-  tag: prod-2ddae77
+  tag: prod-48b1b49
   pullPolicy: Always
 secrets:
   enabled: false
